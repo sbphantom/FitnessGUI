@@ -1,0 +1,16 @@
+.container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background-color: #f1f1f1;
+}
+
+/* Inner container */
+.inner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background-color: #ff0000;
+}
