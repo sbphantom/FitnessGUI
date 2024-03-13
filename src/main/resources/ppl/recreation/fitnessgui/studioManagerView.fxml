@@ -2,8 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -69,10 +71,10 @@
                                                    <Font size="14.0" />
                                                </font>
                                            </Label>
-                                           <GridPane alignment="CENTER" vgap="10" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                                           <GridPane alignment="CENTER" hgap="5.0" vgap="10" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
-                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="100.0" />
                                                </columnConstraints>
                                                <rowConstraints>
                                                    <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="20.0" vgrow="NEVER" />
@@ -82,14 +84,19 @@
                                              <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="NEVER" />
                                                </rowConstraints>
                                                <children>
-                                                   <TextField promptText="First Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                   <TextField promptText="Last Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                   <DatePicker promptText="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                   <TextField fx:id="firstName" promptText="First Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                   <TextField fx:id="lastName" promptText="Last Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                   <DatePicker fx:id="birthdate" editable="false" promptText="Birthdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                    <Label text="Membership Tier:" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                                                   <RadioButton fx:id="familyButton" mnemonicParsing="false" text="Family" GridPane.rowIndex="1" />
-                                                   <RadioButton fx:id="basicButton" mnemonicParsing="false" text="Premium" GridPane.rowIndex="2" />
-                                                   <RadioButton fx:id="premiumButton" mnemonicParsing="false" text="Basic" GridPane.rowIndex="3" />
-                                                 <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="100.0" text="Register!" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                                   <RadioButton fx:id="basicButton" mnemonicParsing="false" text="Basic" GridPane.rowIndex="1" />
+                                                   <RadioButton fx:id="familyButton" mnemonicParsing="false" text="Family" GridPane.rowIndex="2" />
+                                                   <RadioButton fx:id="premiumButton" mnemonicParsing="false" text="Premium" GridPane.rowIndex="3" />
+                                                 <Button fx:id="registerButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onAddMemberButtonClick" prefHeight="25.0" prefWidth="100.0" text="Register!" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                             <MenuButton fx:id="locationSelector" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="120.0" text="Home Studio" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                               <items>
+
+                                               </items>
+                                             </MenuButton>
                                                </children>
                                            </GridPane>
                                      </children>
@@ -107,7 +114,7 @@
                              <columns>
                              </columns>
                          </TableView>
-                                       <GridPane layoutY="238.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                       <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                                          <columnConstraints>
                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                          </columnConstraints>
@@ -115,7 +122,7 @@
                                            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                                          </rowConstraints>
                                           <children>
-                                             <Button mnemonicParsing="false" text="Remove Member" />
+                                             <Button fx:id="removeMemberButton" onAction="#onRemoveMemberButtonClick" text="Remove Member" />
                                           </children>
                                        </GridPane>
 
@@ -174,10 +181,21 @@
                                <content>
                                    <AnchorPane>
                                     <children>
-                                       <TableView fx:id="scheduleTable" layoutX="14.0" prefHeight="200.0" prefWidth="359.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                       <TableView fx:id="scheduleTable" layoutX="14.0" prefHeight="200.0" prefWidth="359.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                          <columns>
                                          </columns>
                                        </TableView>
+                                       <GridPane hgap="10.0" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                          <columnConstraints>
+                                             <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                          </columnConstraints>
+                                          <rowConstraints>
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          </rowConstraints>
+                                          <children>
+                                             <Button fx:id="printAttendance" mnemonicParsing="false" onAction="#onPrintAttendanceButtonClick" text="Print Attendance" GridPane.halignment="CENTER" />
+                                          </children>
+                                       </GridPane>
                                     </children></AnchorPane>
                                </content>
                            </Tab>
@@ -201,6 +219,11 @@
            <content>
              <AnchorPane>
                   <children>
+                     <MenuButton mnemonicParsing="false" text="MenuButton">
+                       <items>
+                       </items>
+                     </MenuButton>
+                     <ChoiceBox prefWidth="150.0" />
                   </children>
                </AnchorPane>
            </content>
