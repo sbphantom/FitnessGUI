@@ -20,16 +20,6 @@ public class StudioManagerMain extends Application {
         return schedule;
     }
 
-
-    public static void commandPrint(String s) {
-        switch (s) {
-            case "S" -> System.out.println(schedule.listString());
-            case "PM" -> memberlist.printByMember();
-            case "PC" -> memberlist.printByCounty();
-            case "PF" -> memberlist.printByFees();
-        }
-    }
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(StudioManagerMain.class.getResource("studioManagerView.fxml"));
