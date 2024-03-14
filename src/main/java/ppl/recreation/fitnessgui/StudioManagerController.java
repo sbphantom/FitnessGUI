@@ -8,8 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -305,9 +304,6 @@ public class StudioManagerController {
                 unrecordMemberSelector.getItems().add(menuItem);
             }
         }
-
-//        onUnrecordStatusSelection();
-//        initializeUnrecordMemberButton((FitnessClass) unrecordClassSelector.getUserData() );
     }
 
     @FXML
@@ -315,32 +311,7 @@ public class StudioManagerController {
         handleUseGuestPassSelection((Member) recordMemberSelector.getUserData(), useGuestPass.isSelected());
     }
 
-    @FXML
-    protected void onUnrecordStatusSelection() {
-        handleUnrecordStatusSelection();
-    }
 
-
-    private void initializeUnrecordMemberButton(FitnessClass fitnessClass) {
-        unrecordMemberSelector.getItems().clear();
-        if (memberButton.isSelected()) {
-            for (Member member : fitnessClass.getMembers().getMembers()) {
-                MenuItem menuItem = new MenuItem(member.getProfile().getFname() + " " + member.getProfile().getLname());
-                menuItem.setOnAction(event -> handleUnrecordMemberSelection(member));
-                menuItem.setUserData(member);
-                unrecordMemberSelector.getItems().add(menuItem);
-            }
-
-        } else if (guestButton.isSelected()) {
-            for (Member guest : fitnessClass.getGuests().getMembers()) {
-                MenuItem menuItem = new MenuItem(guest.getProfile().getFname() + " " + guest.getProfile().getLname());
-                menuItem.setOnAction(event -> handleUnrecordMemberSelection(guest));
-                menuItem.setUserData(guest);
-                unrecordMemberSelector.getItems().add(menuItem);
-            }
-        }
-
-    }
 
     @FXML
     private void handleUseGuestPassSelection(Member member, boolean use) {
@@ -429,16 +400,10 @@ public class StudioManagerController {
     }
 
     private void initializeClassMenuButton() {
-
         unrecordClassSelector.getItems().clear();
         for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
             if (fitnessClass.hasAttendance() || fitnessClass.hasGuestAttendance()) {
                 MenuItem menuItem = new MenuItem(fitnessClass.getMenuString());
-//                menuItem.setOnAction(event -> handleRecordClassSelection(fitnessClass));
-//                menuItem.setUserData(fitnessClass);
-//                recordClassSelector.getItems().add(menuItem);
-//
-//                menuItem = new MenuItem(fitnessClass.getMenuString());
                 menuItem.setOnAction(event -> handleUnrecordClassSelection(fitnessClass));
                 menuItem.setUserData(fitnessClass);
                 unrecordClassSelector.getItems().add(menuItem);
@@ -562,16 +527,31 @@ public class StudioManagerController {
     @FXML
     protected void onPrintMemberButtonClick() {
         appConsole.appendText(StudioManagerMain.getMemberlist().printByMember());
+        members = FXCollections.observableArrayList(StudioManagerMain.getMemberlist().getMembers());
+        memberTable.setItems(members);
+        deregistrationTable.setItems(members);
+        recordMemberSelector.getItems().clear();
+        initializeMemberMenuButton();
     }
 
     @FXML
     protected void onPrintCountyButtonClick() {
         appConsole.appendText(StudioManagerMain.getMemberlist().printByCounty());
+        members = FXCollections.observableArrayList(StudioManagerMain.getMemberlist().getMembers());
+        memberTable.setItems(members);
+        deregistrationTable.setItems(members);
+        recordMemberSelector.getItems().clear();
+        initializeMemberMenuButton();
     }
 
     @FXML
     protected void onPrintFeeButtonClick() {
         appConsole.appendText(StudioManagerMain.getMemberlist().printByFees());
+        members = FXCollections.observableArrayList(StudioManagerMain.getMemberlist().getMembers());
+        memberTable.setItems(members);
+        deregistrationTable.setItems(members);
+        recordMemberSelector.getItems().clear();
+        initializeMemberMenuButton();
     }
 
     @FXML
@@ -656,6 +636,8 @@ public class StudioManagerController {
             }
         }
 
+
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Remove Members");
@@ -671,6 +653,8 @@ public class StudioManagerController {
             deregistrationTable.setItems(members);
             recordMemberSelector.getItems().clear();
             initializeMemberMenuButton();
+
+
 
         }
     }
@@ -693,7 +677,7 @@ public class StudioManagerController {
                 basic.incrementClassCount();
             }
 
-            System.out.println(String.format("%s attendance recorded %s", member.getProfile().getFname(), target.getClassInfo()));
+            System.out.printf("%s attendance recorded %s%n", member.getProfile().getFname(), target.getClassInfo());
 
             recordMemberSelector.setText("Member");
             recordMemberSelector.setUserData(null);
@@ -741,7 +725,6 @@ public class StudioManagerController {
         unrecordMemberSelector.getItems().clear();
         initializeMemberMenuButton();
         initializeClassMenuButton();
-
 
     }
 }
