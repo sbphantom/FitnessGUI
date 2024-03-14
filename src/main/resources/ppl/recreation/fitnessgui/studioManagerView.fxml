@@ -170,8 +170,8 @@
                                                 </items>
                                              </MenuButton>
                                              <Label alignment="CENTER" contentDisplay="CENTER" text="Select Class:" textAlignment="CENTER" GridPane.columnIndex="2" />
-                                             <Label fx:id="useGuestPassCount" alignment="CENTER" contentDisplay="CENTER" text="Guest Pass Count:" textAlignment="CENTER" GridPane.columnIndex="1" />
-                                             <RadioButton fx:id="useGuestPass" mnemonicParsing="false" text="Use Guess Pass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                             <Label fx:id="useGuestPassCount"   alignment="CENTER" contentDisplay="CENTER" text="Guest Pass Count:" textAlignment="CENTER" GridPane.columnIndex="1" />
+                                             <RadioButton fx:id="useGuestPass" onAction="#onUseGuestPassSelection"  mnemonicParsing="false" text="Use Guess Pass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                              <Button fx:id="recordButton"  onAction="#onRecordMemberButtonClick" mnemonicParsing="false" text="Record!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                           </children>
                                        </GridPane>
@@ -214,9 +214,9 @@
                                                 </items>
                                              </MenuButton>
                                              <Label alignment="CENTER" contentDisplay="CENTER" text="Select Class:" textAlignment="CENTER" />
-                                             <RadioButton fx:id="guestButton" mnemonicParsing="false" text="Guest" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                             <Button fx:id="unrecordButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                             <RadioButton fx:id="memberButton" mnemonicParsing="false" text="Member" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                             <RadioButton fx:id="guestButton"  onAction="#handleUnrecordStatusSelection" mnemonicParsing="false" text="Guest" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                             <Button fx:id="unrecordButton" onAction="#onUnrecordMemberButtonClick" mnemonicParsing="false" text="Remove" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                             <RadioButton fx:id="memberButton" onAction="#handleUnrecordStatusSelection" mnemonicParsing="false" text="Member" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                              <Label alignment="CENTER" contentDisplay="CENTER" text="Status" textAlignment="CENTER" GridPane.columnIndex="1" />
                                           </children>
                                        </GridPane>
@@ -304,19 +304,6 @@
                      </TabPane>
                   </children></AnchorPane>
              </content>
-         </Tab>
-         <Tab text="Debug">
-           <content>
-             <AnchorPane>
-                  <children>
-                     <MenuButton mnemonicParsing="false" text="MenuButton">
-                       <items>
-                       </items>
-                     </MenuButton>
-                     <ChoiceBox prefWidth="150.0" />
-                  </children>
-               </AnchorPane>
-           </content>
          </Tab>
      </tabs>
    </TabPane>
