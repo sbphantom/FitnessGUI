@@ -2,8 +2,7 @@ package ppl.recreation.fitnessgui;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -47,9 +46,31 @@ public class StudioManagerController {
     private DatePicker birthdate;
 
     @FXML
+    private MenuButton recordMemberSelector;
+    @FXML
+    private MenuButton recordClassSelector;
+    @FXML
+    private MenuButton unrecordMemberSelector;
+    @FXML
+    private MenuButton unrecordClassSelector;
+    @FXML
     private MenuButton locationSelector;
 
     private ToggleGroup membershipTierGroup = new ToggleGroup();
+
+    private ToggleGroup selectedStatusGroup = new ToggleGroup();
+
+    @FXML
+    private Label useGuestPassCount;
+
+    @FXML
+    private RadioButton useGuestPass;
+
+    @FXML
+    private RadioButton memberButton;
+
+    @FXML
+    private RadioButton guestButton;
 
 
     @FXML
@@ -63,6 +84,11 @@ public class StudioManagerController {
 
     @FXML
     private Button registerButton;
+
+    @FXML
+    private Button recordButton;
+    @FXML
+    private Button unrecordButton;
     @FXML
     public Button printMember;
     @FXML
@@ -99,9 +125,26 @@ public class StudioManagerController {
         homeStudioColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHomeStudio().getName()));
         deregistrationTable.getColumns().add(homeStudioColumn);
 
-        TableColumn<Member, Date> expireColumn = new TableColumn<>("Expiration");
+        TableColumn<Member, String> tierColumn = new TableColumn<>("Tier");
+        tierColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClass().getSimpleName()));
+        deregistrationTable.getColumns().add(tierColumn);
+
+        TableColumn<Member, Number> guestPassColumn = new TableColumn<>("Guest Passes");
+        guestPassColumn.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().guestPassCount()));
+        deregistrationTable.getColumns().add(guestPassColumn);
+
+        TableColumn<Member, Date> expireColumn = new TableColumn<>("Expiration Date");
         expireColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getExpire()));
         deregistrationTable.getColumns().add(expireColumn);
+
+
+        TableColumn<Member, Boolean> expiredColumn = new TableColumn<>("Expired");
+        expiredColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isExpired()));
+        expiredColumn.setCellFactory(CheckBoxTableCell.forTableColumn(expiredColumn));
+        expiredColumn.setEditable(false);
+        deregistrationTable.getColumns().add(expiredColumn);
+
+
     }
 
     private void initializeMemberTable() {
@@ -121,9 +164,22 @@ public class StudioManagerController {
         homeStudioColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHomeStudio().getName()));
         memberTable.getColumns().add(homeStudioColumn);
 
+        TableColumn<Member, String> tierColumn = new TableColumn<>("Tier");
+        tierColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClass().getSimpleName()));
+        memberTable.getColumns().add(tierColumn);
+
+        TableColumn<Member, Number> guestPassColumn = new TableColumn<>("Guest Passes");
+        guestPassColumn.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().guestPassCount()));
+        memberTable.getColumns().add(guestPassColumn);
+
         TableColumn<Member, Date> expireColumn = new TableColumn<>("Expiration");
         expireColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getExpire()));
         memberTable.getColumns().add(expireColumn);
+
+        TableColumn<Member, Boolean> expiredColumn = new TableColumn<>("Expired");
+        expiredColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isExpired()));
+        expiredColumn.setCellFactory(CheckBoxTableCell.forTableColumn(expiredColumn));
+        memberTable.getColumns().add(expiredColumn);
     }
 
     private void initializeScheduleTable() {
@@ -165,19 +221,146 @@ public class StudioManagerController {
         this.premiumButton.setToggleGroup(membershipTierGroup);
     }
 
+    private void initializeStatusSelection() {
+        this.memberButton.setToggleGroup(selectedStatusGroup);
+        this.guestButton.setToggleGroup(selectedStatusGroup);
+
+    }
+
+    private void handleRecordMemberSelection(Member member) {
+        recordMemberSelector.setText(member.getProfile().getFname() + " " + member.getProfile().getLname());
+        recordMemberSelector.setUserData(member);
+
+        useGuestPassCount.setText("Guest Pass Count: " + member.guestPassCount());
+
+        if (member.isFree() && !member.canGuest()) {
+            useGuestPass.setDisable(true);
+            useGuestPass.setSelected(false);
+        } else if (!member.isFree() && member.canGuest()) {
+            useGuestPass.setDisable(true);
+            useGuestPass.setSelected(true);
+        } else if (member.isFree() && member.canGuest()) {
+            useGuestPass.setDisable(false);
+        }
+
+        recordClassSelector.getItems().clear();
+        recordClassSelector.setUserData(null);
+        recordClassSelector.setText("Class");
+
+        handleUseGuestPassSelection(member, useGuestPass.isSelected());
+
+    }
+
+    private void handleUseGuestPassSelection(Member member ,boolean use){
+        if (!use) {
+            for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
+                if (member instanceof Basic && !fitnessClass.getStudio().equals(member.getHomeStudio())) {
+                    continue;
+                }
+                FitnessClass[] memberAttendance = member.getAttendance();
+
+                if (memberAttendance[fitnessClass.getTime().ordinal()] == null) {
+                    MenuItem menuItem = new MenuItem(fitnessClass.getMenuString());
+                    menuItem.setOnAction(event -> handleRecordClassSelection(fitnessClass));
+                    menuItem.setUserData(fitnessClass);
+                    recordClassSelector.getItems().add(menuItem);
+
+                }
+
+            }
+        }
+
+        else{
+            for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
+                if (member instanceof Basic && !fitnessClass.getStudio().equals(member.getHomeStudio())) {
+                    continue;
+                }
+
+                    MenuItem menuItem = new MenuItem(fitnessClass.getMenuString());
+                    menuItem.setOnAction(event -> handleRecordClassSelection(fitnessClass));
+                    menuItem.setUserData(fitnessClass);
+                    recordClassSelector.getItems().add(menuItem);
+
+
+            }
+
+        }
+
+    }
+
+
+    private void handleRecordClassSelection(FitnessClass fitnessClass) {
+        recordClassSelector.setText(fitnessClass.toString());
+        recordClassSelector.setUserData(fitnessClass);
+    }
+
+    private void handleUnrecordMemberSelection(Member member) {
+        unrecordMemberSelector.setText(member.getProfile().getFname() + " " + member.getProfile().getLname());
+        unrecordMemberSelector.setUserData(member);
+    }
+
+    private void handleUnrecordClassSelection(FitnessClass fitnessClass) {
+        unrecordClassSelector.setText(fitnessClass.toString());
+        unrecordMemberSelector.setUserData(fitnessClass);
+    }
+
     private void handleLocationSelection(Location location) {
         locationSelector.setText(location.getName());
+        locationSelector.setUserData(location);
     }
 
     private void initializeLocationMenuButton() {
         for (Location location : Location.values()) {
             MenuItem menuItem = new MenuItem(location.toString());
             menuItem.setOnAction(event -> handleLocationSelection(location));
+            menuItem.setUserData(location);
             locationSelector.getItems().add(menuItem);
         }
     }
 
+    private void initializeMemberMenuButton() {
+        for (Member member : StudioManagerMain.getMemberlist().getMembers()) {
+            if (!member.isExpired()) {
 
+                if (member.isFree()) {
+                    MenuItem menuItem = new MenuItem(member.getProfile().getFname() + " " + member.getProfile().getLname() + " (" + member.getClass().getSimpleName() + ")");
+                    menuItem.setOnAction(event -> handleRecordMemberSelection(member));
+                    menuItem.setUserData(member);
+                    recordMemberSelector.getItems().add(menuItem);
+
+                    menuItem = new MenuItem(member.getProfile().getFname() + " " + member.getProfile().getLname() + " (" + member.getClass().getSimpleName() + ")");
+                    menuItem.setOnAction(event -> handleUnrecordMemberSelection(member));
+                    menuItem.setUserData(member);
+                    unrecordMemberSelector.getItems().add(menuItem);
+                } else if (member.canGuest()) {
+                    MenuItem menuItem = new MenuItem(member.getProfile().getFname() + " " + member.getProfile().getLname() + " (" + member.getClass().getSimpleName() + ")");
+                    menuItem.setOnAction(event -> handleRecordMemberSelection(member));
+                    menuItem.setUserData(member);
+                    recordMemberSelector.getItems().add(menuItem);
+                }
+            }
+        }
+
+    }
+
+    private void initializeClassMenuButton() {
+        for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
+            if (fitnessClass.hasAttendance()) {
+                MenuItem menuItem = new MenuItem(fitnessClass.getMenuString());
+                menuItem.setOnAction(event -> handleRecordClassSelection(fitnessClass));
+                menuItem.setUserData(fitnessClass);
+                recordClassSelector.getItems().add(menuItem);
+
+
+                menuItem = new MenuItem(fitnessClass.getMenuString());
+                menuItem.setOnAction(event -> handleUnrecordClassSelection(fitnessClass));
+                menuItem.setUserData(fitnessClass);
+
+                unrecordClassSelector.getItems().add(menuItem);
+
+            }
+        }
+    }
 
 
     @FXML
@@ -187,14 +370,17 @@ public class StudioManagerController {
         locationTable.setItems(locations);
         deregistrationTable.setItems(members);
         initializeLocationMenuButton();
+        initializeClassMenuButton();
+        initializeMemberMenuButton();
 
         initializeMemberTable();
         initializeScheduleTable();
         initializeLocationTable();
         initializeRegistrationForm();
         initializeDeregistrationTable();
+        initializeStatusSelection();
 
-        BooleanBinding condition = Bindings.createBooleanBinding(() ->
+        BooleanBinding registerCondition = Bindings.createBooleanBinding(() ->
                         membershipTierGroup.getSelectedToggle() != null &&
                                 !locationSelector.getText().equals("Home Studio") &&
                                 firstName.getText() != null && !firstName.getText().isEmpty() &&
@@ -206,7 +392,49 @@ public class StudioManagerController {
                 lastName.textProperty(),
                 birthdate.valueProperty());
 
-        registerButton.disableProperty().bind(condition.not());
+        registerButton.disableProperty().bind(registerCondition.not());
+
+
+        BooleanBinding recordClassCondition = Bindings.createBooleanBinding(() ->
+                        !recordMemberSelector.getText().equals("Member"),
+                recordMemberSelector.textProperty());
+
+        recordClassSelector.disableProperty().bind(recordClassCondition.not());
+
+
+        BooleanBinding recordCondition = Bindings.createBooleanBinding(() ->
+
+                        !recordClassSelector.getText().equals("Class") &&
+                                !recordMemberSelector.getText().equals("Member"),
+
+
+                recordClassSelector.textProperty(),
+                recordMemberSelector.textProperty()
+        );
+
+        recordButton.disableProperty().bind(recordCondition.not());
+
+
+        BooleanBinding unrecordMemberCondition = Bindings.createBooleanBinding(() ->
+                        !unrecordClassSelector.getText().equals("Class"),
+                unrecordClassSelector.textProperty());
+
+        unrecordMemberSelector.disableProperty().bind(unrecordMemberCondition.not());
+
+        recordClassSelector.disableProperty().bind(recordClassCondition.not());
+
+        BooleanBinding unRecordCondition = Bindings.createBooleanBinding(() ->
+                        selectedStatusGroup.getSelectedToggle() != null &&
+                                !unrecordClassSelector.getText().equals("Class") &&
+                                !unrecordMemberSelector.getText().equals("Member"),
+
+                selectedStatusGroup.selectedToggleProperty(),
+                unrecordClassSelector.textProperty(),
+                unrecordMemberSelector.textProperty()
+        );
+
+        unrecordButton.disableProperty().bind(unRecordCondition.not());
+
     }
 
     @FXML
@@ -218,6 +446,8 @@ public class StudioManagerController {
             scheduleTable.setItems(classes);
             loadScheduleButton.setDisable(true);
             loadScheduleButton.setText("Schedule Loaded");
+
+            initializeClassMenuButton();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -234,6 +464,9 @@ public class StudioManagerController {
             deregistrationTable.setItems(members);
             loadMemberlistButton.setDisable(true);
             loadMemberlistButton.setText("Memberlist Loaded");
+
+
+            initializeMemberMenuButton();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -285,7 +518,6 @@ public class StudioManagerController {
         }
         boolean valid = errorMessage == null;
 
-
         boolean result = false;
         if (valid && basicButton.isSelected()) {
             result = StudioManagerMain.getMemberlist().add(new Basic(profile, Date.todayDate().addMonths(1), home));
@@ -305,27 +537,28 @@ public class StudioManagerController {
             alert.setHeaderText(error);
             alert.setContentText(errorMessage);
             alert.showAndWait();
-        }
-        else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Success");
             alert.setHeaderText("Member Added");
             alert.setContentText(String.format("%s %s added.", fname, lname));
             alert.showAndWait();
+
+            members = FXCollections.observableArrayList(StudioManagerMain.getMemberlist().getMembers());
+            memberTable.setItems(members);
+            deregistrationTable.setItems(members);
+
+            firstName.setText(null);
+            lastName.setText(null);
+            birthdate.setValue(null);
+            membershipTierGroup.getSelectedToggle().setSelected(false);
+            locationSelector.setText("Home Studio");
+
+
+            initializeMemberMenuButton();
         }
 
 
-
-        appConsole.appendText(Boolean.toString(result));
-        members = FXCollections.observableArrayList(StudioManagerMain.getMemberlist().getMembers());
-        memberTable.setItems(members);
-        deregistrationTable.setItems(members);
-
-        firstName.setText(null);
-        lastName.setText(null);
-        birthdate.setValue(null);
-        membershipTierGroup.getSelectedToggle().setSelected(false);
-        locationSelector.setText("Home Studio");
     }
 
     @FXML
@@ -351,6 +584,47 @@ public class StudioManagerController {
             }
             memberTable.setItems(members);
             deregistrationTable.setItems(members);
+            recordMemberSelector.getItems().clear();
+            initializeMemberMenuButton();
+
         }
+    }
+
+    @FXML
+    protected void onRecordMemberButtonClick() {
+
+        System.out.println(recordClassSelector.getUserData());
+        Member member = (Member) recordMemberSelector.getUserData();
+        FitnessClass target = (FitnessClass) recordClassSelector.getUserData();
+        FitnessClass[] memberAttendance = member.getAttendance();
+        if (memberAttendance[target.getTime().ordinal()] == null || useGuestPass.isSelected()) {
+            if (!useGuestPass.isSelected()) {
+                memberAttendance[target.getTime().ordinal()] = (target);
+                target.addMember(member);
+            } else {
+                target.addGuest(member);
+                member.useGuestPass();
+            }
+            if (member instanceof Basic basic && !useGuestPass.isSelected()) {
+                basic.incrementClassCount();
+            }
+
+            System.out.println(String.format("%s attendance recorded %s", member.getProfile().getFname(), target.getClassInfo()));
+
+            recordMemberSelector.setText("Member");
+            recordMemberSelector.setUserData(null);
+            recordMemberSelector.getItems().clear();
+            recordClassSelector.setText("Class");
+            recordClassSelector.setUserData(null);
+            recordClassSelector.getItems().clear();
+
+            useGuestPassCount.setText("Guest Pass Count: ");
+            useGuestPass.setDisable(true);
+            useGuestPass.setSelected(false);
+
+            recordMemberSelector.getItems().clear();
+            initializeMemberMenuButton();
+        }
+
     }
 }

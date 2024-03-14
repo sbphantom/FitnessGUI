@@ -6,6 +6,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -134,14 +135,103 @@
                   </children></AnchorPane>
              </content>
          </Tab>
-         <Tab text="Attendance">
+         <Tab text="Manage Attendance">
              <content>
-                 <AnchorPane />
-             </content>
-         </Tab>
-         <Tab text="Member Overview">
-             <content>
-                 <AnchorPane />
+                 <AnchorPane>
+                  <children>
+                     <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                       <tabs>
+                         <Tab text="Mark Attendance">
+                           <content>
+                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                       <GridPane alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                                         <columnConstraints>
+                                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="100.0" />
+                                           <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="100.0" />
+                                         </columnConstraints>
+                                         <rowConstraints>
+                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                         </rowConstraints>
+                                          <children>
+                                             <Label alignment="CENTER" contentDisplay="CENTER" text="Select Member:" textAlignment="CENTER" />
+                                             <MenuButton fx:id="recordMemberSelector" mnemonicParsing="false" text="Member" GridPane.rowIndex="1">
+                                               <items>
+
+                                               </items>
+                                             </MenuButton>
+                                             <MenuButton fx:id="recordClassSelector" mnemonicParsing="false" text="Class" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                <items>
+
+                                                </items>
+                                             </MenuButton>
+                                             <Label alignment="CENTER" contentDisplay="CENTER" text="Select Class:" textAlignment="CENTER" GridPane.columnIndex="2" />
+                                             <Label fx:id="useGuestPassCount" alignment="CENTER" contentDisplay="CENTER" text="Guest Pass Count:" textAlignment="CENTER" GridPane.columnIndex="1" />
+                                             <RadioButton fx:id="useGuestPass" mnemonicParsing="false" text="Use Guess Pass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                             <Button fx:id="recordButton"  onAction="#onRecordMemberButtonClick" mnemonicParsing="false" text="Record!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          </children>
+                                       </GridPane>
+                                       <Label alignment="CENTER" text="Record Member Attendance" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+                                          <font>
+                                             <Font size="14.0" />
+                                          </font>
+                                       </Label>
+                                    </children>
+                                 </AnchorPane>
+                           </content>
+                         </Tab>
+                         <Tab text="Remove Attendance">
+                           <content>
+                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                       <GridPane alignment="CENTER" vgap="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                                          <columnConstraints>
+                                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="175.0" />
+                                             <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="100.0" minWidth="10.0" prefWidth="150.0" />
+                                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="100.0" />
+                                          </columnConstraints>
+                                          <rowConstraints>
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          </rowConstraints>
+                                          <children>
+                                             <Label alignment="CENTER" contentDisplay="CENTER" text="Select Member:" textAlignment="CENTER" GridPane.columnIndex="2" />
+                                             <MenuButton fx:id="unrecordMemberSelector" mnemonicParsing="false" text="Member" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                <items>
+
+                                                </items>
+                                             </MenuButton>
+                                             <MenuButton fx:id="unrecordClassSelector" mnemonicParsing="false" text="Class" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                <items>
+
+                                                </items>
+                                             </MenuButton>
+                                             <Label alignment="CENTER" contentDisplay="CENTER" text="Select Class:" textAlignment="CENTER" />
+                                             <RadioButton fx:id="guestButton" mnemonicParsing="false" text="Guest" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                             <Button fx:id="unrecordButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                             <RadioButton fx:id="memberButton" mnemonicParsing="false" text="Member" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                             <Label alignment="CENTER" contentDisplay="CENTER" text="Status" textAlignment="CENTER" GridPane.columnIndex="1" />
+                                          </children>
+                                       </GridPane>
+                                       <Label alignment="CENTER" text="Remove Member Attendance" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+                                          <font>
+                                             <Font size="14.0" />
+                                          </font>
+                                       </Label>
+                                    </children>
+                                 </AnchorPane>
+                           </content>
+                         </Tab>
+                       </tabs>
+                     </TabPane>
+                  </children></AnchorPane>
              </content>
          </Tab>
          <Tab text="View Database">
