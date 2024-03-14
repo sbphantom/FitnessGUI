@@ -1,0 +1,326 @@
+@startuml
+class ppl.recreation.fitnessgui.FitnessClass {
+- Offer classInfo
+- Instructor instructor
+- Location studio
+- Time time
+- MemberList members
++ boolean GUEST_LIST
+- MemberList guests
++ Offer getClassInfo()
++ Instructor getInstructor()
++ Location getStudio()
++ Time getTime()
++ MemberList getMembers()
++ MemberList getGuests()
++ void addMember(Member)
++ void addGuest(Member)
++ void removeMember(Member)
++ void removeGuest(Member)
++ boolean hasAttendance()
++ boolean hasGuestAttendance()
++ String attendanceList()
++ String getMenuString()
++ String toString()
++ boolean equals(Object)
++ {static} void main(String[])
+}
+
+
+enum ppl.recreation.fitnessgui.Instructor {
++  JENNIFER
++  KIM
++  DENISE
++  DAVIS
++  EMMA
++ String getName()
++ {static} Instructor getInstructor(String)
+}
+
+
+class ppl.recreation.fitnessgui.Profile {
+- String fname
+- String lname
+- Date dob
+- boolean isMinor
++ boolean isMinor()
++ String getFname()
++ String getLname()
++ Date getDob()
++ int compareTo(Profile)
++ boolean equals(Object)
++ String toString()
++ {static} void main(String[])
+}
+
+class ppl.recreation.fitnessgui.Schedule {
+- ArrayList<FitnessClass> classes
+- int numClasses
++ {static} int PARTITION_SIZE
++ ArrayList<FitnessClass> getClasses()
+- boolean add(FitnessClass)
++ FitnessClass findClass(FitnessClass)
++ void load(File)
++ String listString()
+}
+
+
+class ppl.recreation.fitnessgui.Member {
+- Profile profile
+- Date expire
+- Location homeStudio
+- BooleanProperty selected
+- FitnessClass[] attendance
++ double bill()
++ boolean isFree()
++ boolean canGuest()
++ Integer guestPassCount()
++ boolean useGuestPass()
++ boolean addGuestPass()
++ FitnessClass[] getAttendance()
++ Profile getProfile()
++ Date getExpire()
++ Location getHomeStudio()
++ boolean isExpired()
++ BooleanProperty selectedProperty()
++ boolean isSelected()
++ void setSelected(boolean)
++ int compareTo(Member)
++ boolean equals(Object)
++ String toString()
++ {static} void main(String[])
+}
+
+
+enum ppl.recreation.fitnessgui.Offer {
++  PILATES
++  SPINNING
++  CARDIO
++ String getName()
++ {static} Offer getOffer(String)
+}
+
+
+enum ppl.recreation.fitnessgui.Location {
++  BRIDGEWATER
++  EDISON
++  FRANKLIN
++  PISCATAWAY
++  SOMERVILLE
+- String zipCode
+- String county
++ String getName()
++ String getZipCode()
++ String getCounty()
++ {static} Location getLocation(String)
++ String toString()
+}
+
+
+class ppl.recreation.fitnessgui.StudioManagerController {
+- StudioManagerMain studioManagerMain
+- TextArea appConsole
+- TextField firstName
+- TextField lastName
+- DatePicker birthdate
+- Label useGuestPassCount
++ Button loadScheduleButton
++ Button loadMemberlistButton
++ Button registerButton
++ Button recordButton
++ Button unrecordButton
++ Button printMember
++ Button printCounty
++ Button printFee
++ Button printAttendance
+- TableView<Member> memberTable
+- TableView<Member> deregistrationTable
+- TableView<FitnessClass> scheduleTable
+- TableView<Location> locationTable
+- MenuButton locationSelector
+- MenuButton recordMemberSelector
+- MenuButton recordClassSelector
+- MenuButton unrecordMemberSelector
+- MenuButton unrecordClassSelector
+- RadioButton basicButton
+- RadioButton familyButton
+- RadioButton premiumButton
+- RadioButton useGuestPass
+- RadioButton memberButton
+- RadioButton guestButton
+- ToggleGroup membershipTierGroup
+- ToggleGroup selectedStatusGroup
+~ ObservableList<Member> members
+~ ObservableList<FitnessClass> classes
+~ ObservableList<Location> locations
+- void initializeTable(TableView<Member>)
+- void initializeMemberTable()
+- void initializeDeregistrationTable()
+- void initializeScheduleTable()
+- void initializeLocationTable()
+- void initializeTierSelection()
+- void initializeStatusSelection()
+- void initializeLocationMenuButton()
+- void initializeMemberMenuButton()
+- void initializeClassMenuButton()
+- void bindRegisterCondition()
+- void bindRecordClassSelector()
+- void bindRecordCondition()
+- void bindUnrecordMemberSelector()
+- void bindUnrecordCondition()
+- void handleLocationSelection(Location)
+- void handleRecordMemberSelection(Member)
+- void handleUseGuestPassSelection()
+- void handleRecordClassSelection(FitnessClass)
+- void handleUnrecordClassSelection(FitnessClass)
+- void handleUnrecordStatusSelection()
+- void handleUnrecordMemberSelection(Member)
++ void initialize()
+# void onLoadScheduleButtonClick()
+# void onLoadMemberListButtonClick()
+# void onPrintMemberButtonClick()
+# void onPrintCountyButtonClick()
+# void onPrintFeeButtonClick()
+# void onPrintAttendanceButtonClick()
+# void onAddMemberButtonClick()
+# void onRemoveMemberButtonClick()
+# void onRecordMemberButtonClick()
+# void onUnrecordMemberButtonClick()
+}
+
+
+class ppl.recreation.fitnessgui.Premium {
+- int guestPass
+- double PREMIUM_PRICE
+- int billingCycleLength
+- int complementaryMonth
++ double bill()
++ boolean canGuest()
++ boolean useGuestPass()
++ boolean addGuestPass()
++ Integer guestPassCount()
++ String toString()
+}
+
+
+class ppl.recreation.fitnessgui.Basic {
+- int numClasses
+- double BASIC_PRICE
+- int CLASS_LIMIT
+- double EXTRA_CLASS_FEE
++ int getNumClasses()
++ void incrementClassCount()
++ double bill()
++ String toString()
+}
+
+
+class ppl.recreation.fitnessgui.MemberList {
+- ArrayList<Member> members
++ {static} int NOT_FOUND
++ boolean GUEST_LIST
++ ArrayList<Member> getMembers()
++ int getSize()
+- int find(Member)
++ boolean contains(Member)
++ Member getMember(Member)
++ boolean add(Member)
++ boolean remove(Member)
+- void sort(String)
+- int compareMember(Member,Member,String)
++ void load(File)
++ String printByCounty()
++ String printByMember()
++ String printByFees()
+}
+
+
+enum ppl.recreation.fitnessgui.Time {
++  MORNING
++  AFTERNOON
++  EVENING
+- int hour
+- int minute
++ int getHour()
++ int getMinute()
++ {static} Time getTime(String)
++ String toString()
+}
+
+
+class ppl.recreation.fitnessgui.StudioManagerMain {
+- {static} MemberList memberlist
+- {static} Schedule schedule
++ {static} MemberList getMemberlist()
++ {static} Schedule getSchedule()
++ void start(Stage)
++ {static} void main(String[])
+}
+
+
+class ppl.recreation.fitnessgui.Family {
+- boolean guest
+- double FAMILY_PRICE
+- int billingCycleLength
++ double bill()
++ boolean canGuest()
++ boolean useGuestPass()
++ Integer guestPassCount()
++ boolean addGuestPass()
++ String toString()
+}
+
+
+class ppl.recreation.fitnessgui.Date {
++ int NUM_OF_MONTHS
++ int MAX_DAYS
++ int MIN_YEAR
+- int year
+- int month
+- int day
++ int getYear()
++ int getMonth()
++ int getDay()
++ Date addMonths(int)
++ Date addYears(int)
++ {static} Date todayDate()
++ int compareTo(Date)
++ String toString()
++ boolean equals(Object)
++ boolean isValid()
++ boolean isExpired()
++ {static} void main(String[])
+}
+
+
+StudioManagerMain  -- StudioManagerController
+StudioManagerMain -- MemberList
+StudioManagerMain  -- Schedule
+
+
+MemberList "1" *-- "*" Member
+MemberList --* FitnessClass
+
+
+Schedule "1" *-- "*" FitnessClass
+
+
+Member -- Profile
+Member -- Date
+Member -- Location
+Member -- FitnessClass
+
+Member <|-- Premium
+Member <|-- Basic
+Member <|-- Family
+Member "1" *- "0*" FitnessClass
+
+Profile -- Date
+
+FitnessClass -- Offer
+FitnessClass -- Time
+FitnessClass -- Instructor
+FitnessClass -- Location
+
+
+@enduml
