@@ -267,11 +267,14 @@ public class StudioManagerController {
             guestButton.setSelected(true);
         }
 
+        unrecordMemberSelector.setText("Member");
+        unrecordMemberSelector.setUserData(null);
+        unrecordMemberSelector.getItems().clear();
 
         handleUnrecordStatusSelection();
 
-        unrecordMemberSelector.setText("Member");
-        unrecordMemberSelector.setUserData(null);
+
+
     }
 
     @FXML
@@ -280,23 +283,21 @@ public class StudioManagerController {
         unrecordMemberSelector.setUserData(null);
         FitnessClass fitnessClass = (FitnessClass) unrecordClassSelector.getUserData();
 
-        unrecordMemberSelector.getItems().clear();
-        if(memberButton.isSelected()){
+        if (memberButton.isSelected()) {
             unrecordMemberSelector.setText("Member");
             System.out.println(fitnessClass.getMembers().getMembers().size());
-            for (Member m : fitnessClass.getMembers().getMembers()){
+            for (Member m : fitnessClass.getMembers().getMembers()) {
                 MenuItem menuItem = new MenuItem(m.getProfile().getFname() + " " + m.getProfile().getLname());
                 menuItem.setOnAction(event -> handleUnrecordMemberSelection(m));
                 menuItem.setUserData(m);
                 unrecordMemberSelector.getItems().add(menuItem);
             }
 
-        }
-        else if(guestButton.isSelected()){
+        } else if (guestButton.isSelected()) {
             unrecordMemberSelector.setText("Guest");
             System.out.println(unrecordMemberSelector.getUserData());
             System.out.println(fitnessClass.getGuests().getMembers().size());
-            for (Member g : fitnessClass.getGuests().getMembers()){
+            for (Member g : fitnessClass.getGuests().getMembers()) {
                 MenuItem menuItem = new MenuItem(g.getProfile().getFname() + " " + g.getProfile().getLname());
                 menuItem.setOnAction(event -> handleUnrecordMemberSelection(g));
 
@@ -311,15 +312,13 @@ public class StudioManagerController {
 
     @FXML
     protected void onUseGuestPassSelection() {
-        handleUseGuestPassSelection((Member)recordMemberSelector.getUserData(), useGuestPass.isSelected());
+        handleUseGuestPassSelection((Member) recordMemberSelector.getUserData(), useGuestPass.isSelected());
     }
 
     @FXML
     protected void onUnrecordStatusSelection() {
         handleUnrecordStatusSelection();
     }
-
-
 
 
     private void initializeUnrecordMemberButton(FitnessClass fitnessClass) {
@@ -332,8 +331,7 @@ public class StudioManagerController {
                 unrecordMemberSelector.getItems().add(menuItem);
             }
 
-        }
-        else if(guestButton.isSelected()) {
+        } else if (guestButton.isSelected()) {
             for (Member guest : fitnessClass.getGuests().getMembers()) {
                 MenuItem menuItem = new MenuItem(guest.getProfile().getFname() + " " + guest.getProfile().getLname());
                 menuItem.setOnAction(event -> handleUnrecordMemberSelection(guest));
@@ -345,7 +343,7 @@ public class StudioManagerController {
     }
 
     @FXML
-    private void handleUseGuestPassSelection(Member member, boolean use){
+    private void handleUseGuestPassSelection(Member member, boolean use) {
         recordClassSelector.getItems().clear();
         if (!use) {
             for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
@@ -363,16 +361,15 @@ public class StudioManagerController {
                 }
 
             }
-        }
-        else{
+        } else {
             for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
                 if (member instanceof Basic && !fitnessClass.getStudio().equals(member.getHomeStudio())) {
                     continue;
                 }
-                    MenuItem menuItem = new MenuItem(fitnessClass.getMenuString());
-                    menuItem.setOnAction(event -> handleRecordClassSelection(fitnessClass));
-                    menuItem.setUserData(fitnessClass);
-                    recordClassSelector.getItems().add(menuItem);
+                MenuItem menuItem = new MenuItem(fitnessClass.getMenuString());
+                menuItem.setOnAction(event -> handleRecordClassSelection(fitnessClass));
+                menuItem.setUserData(fitnessClass);
+                recordClassSelector.getItems().add(menuItem);
 
 
             }
@@ -389,7 +386,6 @@ public class StudioManagerController {
         unrecordMemberSelector.setText(member.getProfile().getFname() + " " + member.getProfile().getLname());
         unrecordMemberSelector.setUserData(member);
     }
-
 
 
     private void handleLocationSelection(Location location) {
@@ -723,29 +719,28 @@ public class StudioManagerController {
         Member member = (Member) unrecordMemberSelector.getUserData();
         FitnessClass target = (FitnessClass) unrecordClassSelector.getUserData();
 
-        if (memberButton.isSelected()){
+        if (memberButton.isSelected()) {
             member.getAttendance()[target.getTime().ordinal()] = null;
             target.removeMember(member);
             memberButton.setSelected(false);
-        }
-        else if(guestButton.isSelected()){
+        } else if (guestButton.isSelected()) {
             target.removeGuest(member);
             guestButton.setSelected(false);
         }
 
-            unrecordMemberSelector.setText("Member");
-            unrecordMemberSelector.setUserData(null);
-            unrecordMemberSelector.getItems().clear();
-            unrecordClassSelector.setText("Class");
-            unrecordClassSelector.setUserData(null);
-            unrecordClassSelector.getItems().clear();
+        unrecordMemberSelector.setText("Member");
+        unrecordMemberSelector.setUserData(null);
+        unrecordMemberSelector.getItems().clear();
+        unrecordClassSelector.setText("Class");
+        unrecordClassSelector.setUserData(null);
+        unrecordClassSelector.getItems().clear();
 
 
-            handleUnrecordStatusSelection();
+        handleUnrecordStatusSelection();
 
-            unrecordMemberSelector.getItems().clear();
-            initializeMemberMenuButton();
-            initializeClassMenuButton();
+        unrecordMemberSelector.getItems().clear();
+        initializeMemberMenuButton();
+        initializeClassMenuButton();
 
 
     }
