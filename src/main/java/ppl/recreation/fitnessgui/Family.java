@@ -56,6 +56,19 @@ public class Family extends Member {
     }
 
     /**
+     * Returns the number of guest passes.
+     *
+     * @return true if the member is able to guess.
+     */
+    @Override
+    public Integer guestPassCount() {
+        if (canGuest()) {
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
      * Adds a guest pass to the user.
      *
      * @return true if a guest pass was successfully added.

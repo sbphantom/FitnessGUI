@@ -14,8 +14,8 @@ public class Premium extends Member {
     /**
      * Constructs a premium tier member.
      *
-     * @param profile The profile of the customer.
-     * @param expire The expiration date of the customer's plan.
+     * @param profile    The profile of the customer.
+     * @param expire     The expiration date of the customer's plan.
      * @param homeStudio The signup location of the costumer.
      */
     public Premium(Profile profile, Date expire, Location homeStudio) {
@@ -70,6 +70,16 @@ public class Premium extends Member {
     public boolean addGuestPass() {
         guestPass++;
         return true;
+    }
+
+    /**
+     * Returns the number of guest passes.
+     *
+     * @return number of guest passes.
+     */
+    @Override
+    public Integer guestPassCount() {
+        return guestPass;
     }
 
     /**
