@@ -151,6 +151,18 @@ public class FitnessClass {
      *
      * @return class string
      */
+    public String getMenuString() {
+        return String.format("%s - %s (%s, %s)", classInfo.getName(), instructor.getName(), time.name().charAt(0), studio.getName());
+    }
+
+
+
+
+    /**
+     * Returns a string contain the fitness class
+     *
+     * @return class string
+     */
     @Override
     public String toString() {
         return String.format("%s, %d:%02d, %s", instructor, time.getHour(), time.getMinute(), studio.name());
