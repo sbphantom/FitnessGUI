@@ -70,6 +70,15 @@ public class FitnessClass {
         return time;
     }
 
+
+    public MemberList getMembers() {
+        return members;
+    }
+
+    public MemberList getGuests() {
+        return guests;
+    }
+
     /**
      * Marks the attendance of a member.
      */
