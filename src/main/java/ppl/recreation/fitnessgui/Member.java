@@ -42,6 +42,16 @@ public class Member implements Comparable<Member> {
         return 0.0;
      }
 
+     public boolean isFree(){
+         boolean free = false;
+         for (int i = 0; i < Time.values().length; i++){
+             if (attendance[i] == null){
+                 free = true;
+             }
+         }
+         return free;
+     }
+
     /**
      * Returns whether the member is able to guess.
      *
@@ -49,6 +59,14 @@ public class Member implements Comparable<Member> {
      */
     public boolean canGuest(){
         return false;
+    }
+    /**
+     * Returns whether the number of guest passes.
+     *
+     * @return true if the member is able to guess.
+     */
+    public Integer guestPassCount(){
+        return 0;
     }
 
     /**
