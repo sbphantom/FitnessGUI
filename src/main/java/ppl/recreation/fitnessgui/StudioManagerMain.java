@@ -34,8 +34,8 @@ public class StudioManagerMain extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(StudioManagerMain.class.getResource("studioManagerView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-//        stage.setMinWidth(600);
-//        stage.setMinHeight(600);
+        stage.setMinWidth(600);
+        stage.setMinHeight(600);
         stage.setTitle("Recreation Dashboard");
         stage.setScene(scene);
         stage.show();
