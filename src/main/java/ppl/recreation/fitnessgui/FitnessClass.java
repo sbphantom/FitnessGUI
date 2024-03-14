@@ -84,6 +84,9 @@ public class FitnessClass {
      */
     public void addMember(Member member) {
         members.add(member);
+        if (member instanceof Basic basic) {
+            basic.incrementClassCount();
+        }
     }
 
     /**
