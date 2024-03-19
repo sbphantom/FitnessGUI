@@ -44,10 +44,20 @@ public class FitnessClass {
         this.studio = studio;
     }
 
+    /**
+     * Returns the type of the fitness class.
+     *
+     * @return fitness class type
+     */
     public Offer getClassInfo() {
         return classInfo;
     }
 
+    /**
+     * Returns the instructor of the fitness class.
+     *
+     * @return fitness class instructor
+     */
     public Instructor getInstructor() {
         return instructor;
     }
@@ -70,17 +80,26 @@ public class FitnessClass {
         return time;
     }
 
-
+    /**
+     * Returns a Memberlist containing the members currently in attendance.
+     *
+     * @return attendance Memberlist
+     */
     public MemberList getMembers() {
         return members;
     }
 
+    /**
+     * Returns a Memberlist containing the guests currently in attendance.
+     *
+     * @return guest attendance Memberlist
+     */
     public MemberList getGuests() {
         return guests;
     }
 
     /**
-     * Marks the attendance of a member.
+     * Adds a member to attendance.
      */
     public void addMember(Member member) {
         members.add(member);
@@ -90,7 +109,7 @@ public class FitnessClass {
     }
 
     /**
-     * Marks the attendance of a guest.
+     * Adds a guest to attendance.
      */
     public void addGuest(Member guest) {
         guests.add(guest);
@@ -112,18 +131,18 @@ public class FitnessClass {
     }
 
     /**
-     * Returns whether if members have attended the class
+     * Returns whether any members are in the attendance list
      *
-     * @return true if members have attended
+     * @return true if the class has attendance
      */
     public boolean hasAttendance() {
         return members.getSize() > 0;
     }
 
     /**
-     * Returns whether if guests have attended the class
+     * Returns whether any guests are in the attendance list
      *
-     * @return true if guests have attended
+     * @return true if the class has guests attendance
      */
     public boolean hasGuestAttendance() {
         return guests.getSize() > 0;
@@ -159,9 +178,9 @@ public class FitnessClass {
     }
 
     /**
-     * Returns a string contain the fitness class
+     * Returns a formatted string contain the fitness class information
      *
-     * @return class string
+     * @return fitness class string
      */
     public String getMenuString() {
         return String.format("%s - %s (%s, %s)", classInfo.getName(), instructor.getName(), time.name().charAt(0), studio.getName());
@@ -193,6 +212,9 @@ public class FitnessClass {
         return false;
     }
 
+    /**
+     * Testbed main
+     */
     public static void main(String[] args) {
         Offer offer = Offer.PILATES;
         Instructor instructor = Instructor.EMMA;
