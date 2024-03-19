@@ -14,6 +14,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * Graphical user interface controller of the application
+ *
+ * @author Danny Onuorah
+ */
 public class StudioManagerController {
     @FXML
     private TextArea appConsole;
@@ -87,6 +92,9 @@ public class StudioManagerController {
     ObservableList<FitnessClass> classes = FXCollections.observableArrayList(StudioManagerMain.getSchedule().getClasses());
     ObservableList<Location> locations = FXCollections.observableArrayList(Location.values());
 
+    /**
+     * Initializes viewable table with MemberList and member data
+     */
     private void initializeTable(TableView<Member> table) {
         TableColumn<Member, String> firstNameColumn = new TableColumn<>("First Name");
         firstNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProfile().getFname()));
@@ -122,10 +130,16 @@ public class StudioManagerController {
         table.getColumns().add(expiredColumn);
     }
 
+    /**
+     * Initializes viewable table with MemberList and member data
+     */
     private void initializeMemberTable() {
         initializeTable(memberTable);
     }
 
+    /**
+     * Initializes the member removal table
+     */
     private void initializeDeregistrationTable() {
         deregistrationTable.setEditable(true);
 
@@ -137,6 +151,9 @@ public class StudioManagerController {
         initializeTable(deregistrationTable);
     }
 
+    /**
+     * Initializes viewable table with schedule information
+     */
     private void initializeScheduleTable() {
         TableColumn<FitnessClass, String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClassInfo().getName()));
@@ -155,6 +172,9 @@ public class StudioManagerController {
         scheduleTable.getColumns().add(timeColumn);
     }
 
+    /**
+     * Initializes a table with list of Location
+     */
     private void initializeLocationTable() {
         TableColumn<Location, String> cityColumn = new TableColumn<>("City");
         cityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
@@ -169,17 +189,26 @@ public class StudioManagerController {
         locationTable.getColumns().add(countyColumn);
     }
 
+    /**
+     * Initializes toggle group for selection membership tier
+     */
     private void initializeTierSelection() {
         this.basicButton.setToggleGroup(membershipTierGroup);
         this.familyButton.setToggleGroup(membershipTierGroup);
         this.premiumButton.setToggleGroup(membershipTierGroup);
     }
 
+    /**
+     * Initializes toggle group for entity type in attendance removal
+     */
     private void initializeStatusSelection() {
         this.memberButton.setToggleGroup(selectedStatusGroup);
         this.guestButton.setToggleGroup(selectedStatusGroup);
     }
 
+    /**
+     * Initializes dropdown menu for selecting home studio during member registration
+     */
     private void initializeLocationMenuButton() {
         for (Location location : Location.values()) {
             MenuItem menuItem = new MenuItem(location.toString());
@@ -189,6 +218,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Initializes dropdown menu of eligible members to select when registering attendance
+     */
     private void initializeMemberMenuButton() {
         recordMemberSelector.getItems().clear();
         for (Member member : StudioManagerMain.getMemberlist().getMembers()) {
@@ -201,6 +233,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Initializes dropdown menu of currently attended classes to select when removing attendance
+     */
     private void initializeClassMenuButton() {
         unrecordClassSelector.getItems().clear();
         for (FitnessClass fitnessClass : StudioManagerMain.getSchedule().getClasses()) {
@@ -213,6 +248,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Initializes binding property to enforce registration form validation
+     */
     private void bindRegisterCondition() {
         BooleanBinding registerCondition = Bindings.createBooleanBinding(() ->
                         membershipTierGroup.getSelectedToggle() != null &&
@@ -229,7 +267,9 @@ public class StudioManagerController {
         registerButton.disableProperty().bind(registerCondition.not());
     }
 
-
+    /**
+     * Initializes binding property to ensure a member is selected before selecting a class for attendance
+     */
     private void bindRecordClassSelector() {
         BooleanBinding recordClassCondition = Bindings.createBooleanBinding(() ->
                         !recordMemberSelector.getText().equals("Member"),
@@ -238,6 +278,9 @@ public class StudioManagerController {
         recordClassSelector.disableProperty().bind(recordClassCondition.not());
     }
 
+    /**
+     * Initializes binding property to ensure a member and a class are selected before marking attendance
+     */
     private void bindRecordCondition() {
         BooleanBinding recordCondition = Bindings.createBooleanBinding(() ->
                         !recordClassSelector.getText().equals("Class") &&
@@ -250,6 +293,9 @@ public class StudioManagerController {
     }
 
 
+    /**
+     * Initializes binding property to ensure a class is selected before selecting a member to unrecord attendance
+     */
     private void bindUnrecordMemberSelector() {
         BooleanBinding unrecordMemberCondition = Bindings.createBooleanBinding(() ->
                         !unrecordClassSelector.getText().equals("Class"),
@@ -258,6 +304,9 @@ public class StudioManagerController {
         unrecordMemberSelector.disableProperty().bind(unrecordMemberCondition.not());
     }
 
+    /**
+     * Initializes binding property to ensure a class and member is selected before unrecording attendance
+     */
     private void bindUnrecordCondition() {
         BooleanBinding unrecordCondition = Bindings.createBooleanBinding(() ->
                         selectedStatusGroup.getSelectedToggle() != null &&
@@ -272,11 +321,20 @@ public class StudioManagerController {
         unrecordButton.disableProperty().bind(unrecordCondition.not());
     }
 
+    /**
+     * Handles selecting a home studio location during registration
+     * Selects the location and updates the text of the dropdown menu
+     */
+
     private void handleLocationSelection(Location location) {
         locationSelector.setText(location.getName());
         locationSelector.setUserData(location);
     }
 
+    /**
+     * Handles selecting a member during attendance
+     * Displays the amount of guest passes available and enables the guest pass button
+     */
     private void handleRecordMemberSelection(Member member) {
         if (member == null) return;
         recordMemberSelector.setText(member.getProfile().getFname() + " " + member.getProfile().getLname());
@@ -294,6 +352,10 @@ public class StudioManagerController {
         handleUseGuestPassSelection();
     }
 
+    /**
+     * Handles selecting a guest pass during attendance
+     * Populates the fitness class selector with eligible classes
+     */
     @FXML
     private void handleUseGuestPassSelection() {
         if (recordMemberSelector.getUserData() == null) return;
@@ -317,12 +379,20 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Handles selecting a class during attendance
+     * Selects the class and updates the text of the dropdown menu
+     */
     private void handleRecordClassSelection(FitnessClass fitnessClass) {
         if (fitnessClass == null) return;
         recordClassSelector.setText(fitnessClass.toString());
         recordClassSelector.setUserData(fitnessClass);
     }
 
+    /**
+     * Handles selecting a class to remove attendance from
+     * Enables to the entity selector if the class has member attendance and/or guest attendance
+     */
     private void handleUnrecordClassSelection(FitnessClass fitnessClass) {
         unrecordClassSelector.setText(fitnessClass.toString());
         unrecordClassSelector.setUserData(fitnessClass);
@@ -342,6 +412,10 @@ public class StudioManagerController {
         handleUnrecordStatusSelection();
     }
 
+    /**
+     * Handles selecting entity type
+     * Populates the member selector with the list of members or guest in the class
+     */
     @FXML
     private void handleUnrecordStatusSelection() {
         if (unrecordClassSelector.getUserData() == null || selectedStatusGroup.getSelectedToggle() == null) return;
@@ -368,12 +442,18 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Handles selecting a member during attendance removal
+     * Selects the member and updates the text of the dropdown menu
+     */
     private void handleUnrecordMemberSelection(Member member) {
         unrecordMemberSelector.setText(member.getProfile().getFname() + " " + member.getProfile().getLname());
         unrecordMemberSelector.setUserData(member);
     }
 
-
+    /**
+     * Initializes all GUI components
+     */
     @FXML
     public void initialize() {
         initializeMemberTable();
@@ -399,7 +479,9 @@ public class StudioManagerController {
         bindUnrecordCondition();
     }
 
-
+    /**
+     * Loads the schedule file and refreshes schedule related components
+     */
     @FXML
     protected void onLoadScheduleButtonClick() {
         try {
@@ -420,6 +502,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Loads the memberlist file and refreshes member related components
+     */
     @FXML
     protected void onLoadMemberListButtonClick() {
         try {
@@ -436,6 +521,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Prints the memberlist sorted by member to the app console
+     */
     @FXML
     protected void onPrintMemberButtonClick() {
         appConsole.appendText(StudioManagerMain.getMemberlist().printByMember());
@@ -446,6 +534,9 @@ public class StudioManagerController {
         initializeMemberMenuButton();
     }
 
+    /**
+     * Prints the memberlist sorted by county to the app console
+     */
     @FXML
     protected void onPrintCountyButtonClick() {
         appConsole.appendText(StudioManagerMain.getMemberlist().printByCounty());
@@ -456,6 +547,9 @@ public class StudioManagerController {
         initializeMemberMenuButton();
     }
 
+    /**
+     * Prints the memberlist with their fees due to the app console
+     */
     @FXML
     protected void onPrintFeeButtonClick() {
         appConsole.appendText(StudioManagerMain.getMemberlist().printByFees());
@@ -466,11 +560,17 @@ public class StudioManagerController {
         initializeMemberMenuButton();
     }
 
+    /**
+     * Prints the attendance of the class to the app console
+     */
     @FXML
     protected void onPrintAttendanceButtonClick() {
         appConsole.appendText(StudioManagerMain.getSchedule().listString());
     }
 
+    /**
+     * Registers a member
+     */
     @FXML
     protected void onAddMemberButtonClick() {
         String fname = firstName.getText();
@@ -535,6 +635,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Removes a member from the memberlist
+     */
     @FXML
     protected void onRemoveMemberButtonClick() {
         ArrayList<Integer> selectedMemberIdx = new ArrayList<>();
@@ -563,6 +666,9 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Records the attendance of a member
+     */
     @FXML
     protected void onRecordMemberButtonClick() {
         Member member = (Member) recordMemberSelector.getUserData();
@@ -604,26 +710,14 @@ public class StudioManagerController {
         }
     }
 
+    /**
+     * Removes the attendance of a member
+     */
     @FXML
     protected void onUnrecordMemberButtonClick() {
         Member member = (Member) unrecordMemberSelector.getUserData();
         FitnessClass target = (FitnessClass) unrecordClassSelector.getUserData();
 
-        String message;
-        if (memberButton.isSelected()) {
-            member.getAttendance()[target.getTime().ordinal()] = null;
-            target.removeMember(member);
-            memberButton.setSelected(false);
-            memberButton.setDisable(true);
-            message = String.format("%s %s's attendance has been removed from %s's %s class in %s.",
-                    member.getProfile().getFname(), member.getProfile().getLname(), target.getInstructor().getName(), target.getClassInfo().getName(), target.getStudio().getName());
-        } else {
-            target.removeGuest(member);
-            guestButton.setSelected(false);
-            guestButton.setDisable(true);
-            message = String.format("%s %s's guest attendance has been removed from %s's %s class in %s.",
-                    member.getProfile().getFname(), member.getProfile().getLname(), target.getInstructor().getName(), target.getClassInfo().getName(), target.getStudio().getName());
-        }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Remove Attendance");
@@ -631,6 +725,21 @@ public class StudioManagerController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            String message;
+            if (memberButton.isSelected()) {
+                member.getAttendance()[target.getTime().ordinal()] = null;
+                target.removeMember(member);
+                memberButton.setSelected(false);
+                memberButton.setDisable(true);
+                message = String.format("%s %s's attendance has been removed from %s's %s class in %s.",
+                        member.getProfile().getFname(), member.getProfile().getLname(), target.getInstructor().getName(), target.getClassInfo().getName(), target.getStudio().getName());
+            } else {
+                target.removeGuest(member);
+                guestButton.setSelected(false);
+                guestButton.setDisable(true);
+                message = String.format("%s %s's guest attendance has been removed from %s's %s class in %s.",
+                        member.getProfile().getFname(), member.getProfile().getLname(), target.getInstructor().getName(), target.getClassInfo().getName(), target.getStudio().getName());
+            }
             unrecordMemberSelector.setText("Member");
             unrecordMemberSelector.setUserData(null);
             unrecordMemberSelector.getItems().clear();
