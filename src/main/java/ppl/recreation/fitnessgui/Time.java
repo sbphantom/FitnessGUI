@@ -6,9 +6,7 @@ package ppl.recreation.fitnessgui;
  * @author Danny Onuorah, Adeola Asimolowo
  */
 public enum Time {
-    MORNING(9, 30),
-    AFTERNOON(14, 0),
-    EVENING(18, 30);
+    MORNING(9, 30), AFTERNOON(14, 0), EVENING(18, 30);
     private final int hour;
     private final int minute;
 
