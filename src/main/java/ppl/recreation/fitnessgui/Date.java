@@ -8,7 +8,7 @@ import java.util.GregorianCalendar;
  * Range of valid date values are from 1/1/1900
  * to the date of compiled time.
  * <p>
- * Provides methods to create Date objects, compare them, and check for validity.
+ * Provides methods to create, compare, and validate Date objects.
  *
  * @author Danny Onuorah, Adeola Asimolowo
  */
@@ -183,7 +183,7 @@ public class Date implements Comparable<Date> {
     /**
      * Returns whether the date is expired
      *
-     * @return true if the date is expired, false otherwise
+     * @return true if expired, else false
      */
     public boolean isExpired() {
         Calendar calendar = Calendar.getInstance();

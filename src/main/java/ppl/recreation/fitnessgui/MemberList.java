@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * This is an array-based implementation of a linear data structure to hold a list of member
+ * This is an ArrayList-based implementation of a linear data structure to hold a list of member
  *
  * @author Danny Onuorah, Adeola Asimolowo
  */
@@ -33,7 +33,7 @@ public class MemberList {
     /**
      * Returns the members of the MemberList.
      *
-     * @return an array of Member objects representing the members of the MemberList.
+     * @return an ArrayList of Member objects representing the members of the MemberList.
      */
     public ArrayList<Member> getMembers() {
         return members;
@@ -62,7 +62,6 @@ public class MemberList {
         }
         return NOT_FOUND;
     }
-
 
     /**
      * Checks if a member is in the MemberList.
@@ -228,6 +227,6 @@ public class MemberList {
         sb.append("-end of list-");
         return sb.toString();
 //        System.out.println(sb);
-}
+    }
 
 }

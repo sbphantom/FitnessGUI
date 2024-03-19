@@ -40,7 +40,7 @@ public class Premium extends Member {
     /**
      * Returns whether the member is able to guess.
      *
-     * @return true if the member is able to guess.
+     * @return true if eligible.
      */
     @Override
     public boolean canGuest() {
@@ -48,7 +48,7 @@ public class Premium extends Member {
     }
 
     /**
-     * Use of a guest pass of the user.
+     * Use  a guest pass of the member.
      *
      * @return true if a guest pass was successfully used.
      */
@@ -62,7 +62,7 @@ public class Premium extends Member {
     }
 
     /**
-     * Adds a guest pass to the user.
+     * Adds a guest pass to the member.
      *
      * @return true if a guest pass was successfully added.
      */

@@ -41,7 +41,7 @@ public class Basic extends Member {
     /**
      * Returns the amount of money due for the billing cycle.
      *
-     * @return the amount due
+     * @return amount due
      */
     @Override
     public double bill() {
@@ -55,7 +55,7 @@ public class Basic extends Member {
     }
 
     /**
-     * Returns a string contain member
+     * Returns a formatted string containing member info
      *
      * @return member string
      */

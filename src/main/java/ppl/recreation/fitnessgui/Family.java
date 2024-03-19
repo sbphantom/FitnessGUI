@@ -8,7 +8,6 @@ package ppl.recreation.fitnessgui;
 public class Family extends Member {
     private boolean guest;
     private final double FAMILY_PRICE = 49.99;
-
     private final int billingCycleLength = 3;
 
     /**
@@ -34,7 +33,7 @@ public class Family extends Member {
     /**
      * Returns whether the member is able to guess.
      *
-     * @return true if the member is able to guess.
+     * @return true if eligible.
      */
     @Override
     public boolean canGuest() {
@@ -42,7 +41,7 @@ public class Family extends Member {
     }
 
     /**
-     * Use of a guest pass of the user.
+     * Uses a guest pass of the member.
      *
      * @return true if a guest pass was successfully used.
      */
@@ -56,9 +55,9 @@ public class Family extends Member {
     }
 
     /**
-     * Returns the number of guest passes.
+     * Returns the number of guest passes the member has.
      *
-     * @return true if the member is able to guess.
+     * @return number of guest pass.
      */
     @Override
     public Integer guestPassCount() {

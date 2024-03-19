@@ -12,13 +12,11 @@ import java.util.Scanner;
  */
 public class Schedule {
     private ArrayList<FitnessClass> classes = new ArrayList<>();
-    private int numClasses;
-    public static final int PARTITION_SIZE = 4;
 
     /**
-     * Adds a new class to the class list
+     * Returns an ArrayList of all the fitness classes in the schedule
      *
-     * @return the class array
+     * @return ArrayList of fitness classes
      */
     public ArrayList<FitnessClass> getClasses() {
         return classes;
@@ -33,7 +31,6 @@ public class Schedule {
         classes.add(fitnessClass);
         return true;
     }
-
 
     /**
      * Searches for a class in the class list
