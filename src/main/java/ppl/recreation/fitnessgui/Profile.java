@@ -109,9 +109,4 @@ public class Profile implements Comparable<Profile> {
         return String.format("%s:%s:%s", this.fname, this.lname, this.dob);
     }
 
-
-    public static void main(String[] args) {
-
-    }
-
 }
